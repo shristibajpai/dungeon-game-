@@ -7,7 +7,7 @@ using namespace std;
 Player::Player(string playerName) {
     name = playerName;
     health = 100;
-    attackPower = 20;
+    attackPower = 15;
 }
 
 // Display player details

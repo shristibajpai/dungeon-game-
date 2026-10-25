@@ -1,10 +1,22 @@
-
 #include "BattleSystem.h"
+#include <chrono>
 #include <iostream>
+#include <random>
 using namespace std;
 
 void BattleSystem::startBattle(Player& player, Enemy& enemy) {
     cout << "\n========== BATTLE START ==========" << endl;
+
+    random_device randomSource;
+    seed_seq seed{
+        randomSource(),
+        randomSource(),
+        static_cast<unsigned int>(chrono::steady_clock::now().time_since_epoch().count())
+    };
+    mt19937 rng(seed);
+    auto rollDamage = [&rng](int attackPower, int maxMultiplier) {
+        return uniform_int_distribution<int>(0, attackPower * maxMultiplier)(rng);
+    };
 
     // Show both characters' stats
     player.showStats();
@@ -18,7 +30,10 @@ void BattleSystem::startBattle(Player& player, Enemy& enemy) {
         cout << player.getName() << " attacks "
              << enemy.getName() << "!" << endl;
 
-        enemy.takeDamage(player.getAttackPower());
+        int playerDamage = rollDamage(player.getAttackPower(), 2);
+        cout << player.getName() << " deals " << playerDamage
+             << " damage." << endl;
+        enemy.takeDamage(playerDamage);
 
         cout << enemy.getName() << "'s remaining health: "
              << enemy.getHealth() << endl;
@@ -35,7 +50,13 @@ void BattleSystem::startBattle(Player& player, Enemy& enemy) {
         cout << enemy.getName() << " attacks "
              << player.getName() << "!" << endl;
 
-        player.takeDamage(enemy.getAttackPower());
+        int enemyDamage = rollDamage(enemy.getAttackPower(), 2);
+        cout << enemy.getName() << " deals " << enemyDamage
+             << " damage." << endl;
+        player.takeDamage(enemyDamage);
+
+        cout << player.getName() << "'s remaining health: "
+             << player.getHealth() << endl;
 
         if (player.getHealth() == 0) {
             cout << "\n" << player.getName()

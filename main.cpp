@@ -19,7 +19,7 @@ int main() {
 
     // Create objects
     Player player1(playerName);
-    Enemy enemy1("Austin", 60, 15);
+    Enemy enemy1("Austin", 100, 15);
 
     // Start the battle
     BattleSystem battle;
